@@ -25,5 +25,13 @@ router.get('/allpost',requirelogin,(req,res)=>{
    .populate("postedBy","_id name")
    .then(posts=>res.json(posts)) 
 })
+// show my post
+router.get('/mypost',requirelogin,(req,res)=>{
+    Post.find({postedBy:req.user._id})
+    .populate("postedBy","_id name")
+    .then(mypost=>{
+        res.json(mypost)
+    })
+})
 
 module.exports=router
