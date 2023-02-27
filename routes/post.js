@@ -33,5 +33,24 @@ router.get('/mypost',requirelogin,(req,res)=>{
         res.json(mypost)
     })
 })
+// Like Post
+router.put('/like',requirelogin,(req,res)=>{
+  Post.findByIdAndUpdate(req.body.postId,{
+    $push:{likes:req.user._id}
+  },{
+    new:true
+  }).then(results=>res.json(results))
+})
+// UnLike Post
+router.put("/unlike",requirelogin,(req,res)=>{
+    Post.findByIdAndUpdate(req.body.postId,{
+        $pull:{likes:req.user._id}
+      },{
+        new:true
+      })
+      .populate("postedBy" ,"name")
+      .then(results=>res.json(results))
+})
+
 
 module.exports=router
