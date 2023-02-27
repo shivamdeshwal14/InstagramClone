@@ -72,5 +72,46 @@ router.put("/comment",requirelogin,(req,res)=>{
       }
   })
 })
+// Delete Post
+router.delete("/deletepost/:postId",requirelogin,(req,res)=>{
+  console.log(req.params.postId)
+ Post.findOne({_id:req.params.postId})
+  .populate("postedBy","_id name")
+  .exec((err,post)=>{
+    console.log(post);
+    if(err){
+      return res.status(422).json({error:err})
+
+    }
+    if(post.postedBy._id.toString()===req.user._id.toString())
+  {
+    post.remove()
+    .then(result=>{
+     return  res.json({result})
+    })
+  }
+  else{
+    res.json("Error")
+  }
+  
+
+  })
+})
+// router.delete("/deletepost/:postId",requirelogin,(req,res)=>{
+//   Post.findOne({_id:req.params.postId})
+//        .populate("postedBy","_id name")
+//        .exec((err,post)=>{
+//         console.log(post);
+//            if(err){
+//               return res.status(422).json({error:err})
+//            }
+//            if(post.postedBy._id.toString() === req.user._id){
+//                post.remove()
+//                     .then(result =>{
+//                         return res.json(result)
+//                     })
+//            }
+//        })
+// })
 
 module.exports=router
