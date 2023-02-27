@@ -74,7 +74,6 @@ router.post('/login',(req,res)=>{
     }
 })
 router.get('/protected',requirelogin,(req,res)=>{
-    // requirelogin is a middleware to verify token
 res.json(req.user)
 })
 
