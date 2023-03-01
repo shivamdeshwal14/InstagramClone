@@ -12,8 +12,6 @@ router.post("/createPost",requirelogin,(req,res)=>{
        return res.status(200).json({error:"Please add all the fields"})
     }
     else{
-        // console.log("req.userrr----->");
-        // console.log(req.user);
         const post=new Post({tittle,body,photo:pic,postedBy:req.user})
         post.save()
         .then(result=> res.json(result))
@@ -96,6 +94,18 @@ router.delete("/deletepost/:postId",requirelogin,(req,res)=>{
   
 
   })
+})
+// subpost
+router.get('/getsubpost',requirelogin,(req,res) =>{
+  Post.find({postedBy:{$in:req.user.following}})
+      .populate("postedBy","_id name")
+      .populate("comments.postedBy","_id name")        
+      .then(posts =>{
+          res.json({posts})
+      })
+      .catch(err =>{
+          console.log(err)
+      })
 })
 
 
